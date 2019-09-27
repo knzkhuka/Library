@@ -6,7 +6,7 @@ using namespace std;
 using ll = long long;
 #define rep(i,n) for(ll i=0;i<(n);++i)
 constexpr long long INF = (1LL<<60);
-template<class T>inline bool chmin(T &a,const T &b){if(a>b){a=b;return true;}return false;}
+template<class T>inline bool chmin(T &a,const T &b){if(a>b){a=b;return 1;}return 0;}
 
 auto Warshall_Floyd(vector<vector<ll>>& dist){
   ll v = dist.size();
