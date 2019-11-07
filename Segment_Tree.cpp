@@ -3,16 +3,19 @@ using namespace std;
 using ll = long long;
 #define rep(i,n) for(ll i=0;i<(n);++i)
 
-class SegmentTree {
+template<class T>
+class segtree {
 private:
-  ll n=1,unit;
-  vector<ll> dat;
-  function<ll(ll,ll)> func;
+  ll n=1;
+  T unit;
+  std::vector<T> dat;
+  std::function<T(T,T)> func;
 public:
-  SegmentTree(vector<ll>& a,ll v,function<ll(ll,ll)> f){
+  segtree(){}
+  segtree(std::vector<T>& a,T v,std::function<T(T,T)> f){
     build(a,v,f);
   }
-  void build(vector<ll>& a,ll v,function<ll(ll,ll)> f){
+  void build(std::vector<T>& a,T v,std::function<T(T,T)> f){
     ll sz=a.size();
     unit=v;
     func=f;
@@ -23,15 +26,7 @@ public:
       dat[i]=func(dat[i*2+1],dat[i*2+2]);
     }
   }
-  void add(ll idx,ll val){
-    idx+=n-1;
-    dat[idx]+=val;
-    while(idx){
-      idx--;idx>>=1LL;
-      dat[idx]=func(dat[idx*2+1],dat[idx*2+2]);
-    }
-  }
-  void update(ll idx,ll val){
+  void update(ll idx,T val){
     idx+=n-1;
     dat[idx]=val;
     while(idx){
@@ -39,7 +34,15 @@ public:
       dat[idx]=func(dat[idx*2+1],dat[idx*2+2]);
     }
   }
-  auto query(ll a,ll b,ll k=0,ll l=0,ll r=-1){
+  void add(ll idx, T val){
+    idx+=n-1;
+    dat[idx]+=val;
+    while(idx){
+      idx--;idx>>=1LL;
+      dat[idx]=func(dat[idx*2+1],dat[idx*2+2]);
+    }
+  }
+  T query(ll a,ll b,ll k=0,ll l=0,ll r=-1){
     if(r<0)r=n;
     if( b<=l || r<=a )return unit;
     if( a<=l && r<=b )return dat[k];
@@ -51,13 +54,14 @@ public:
   }
 };
 
+
 void solve_RMQ(){
   int n,q;
   cin>>n>>q;
   ll base = (1LL<<31)-1;
   vector<ll> a(n,base);
   auto f = [](auto a,auto b){return min(a,b);};
-  SegmentTree rmq(a,base,f);
+  segtree<ll> rmq(a,base,f);
   rep(i,q){
     ll c,x,y;
     cin>>c>>x>>y;
@@ -76,7 +80,7 @@ void solve_RSQ(){
   ll base=0;
   auto f = [](auto a,auto b){return a+b;};
   vector<ll> a(n);
-  SegmentTree rsq(a,base,f);
+  segtree<ll> rsq(a,base,f);
   rep(i,q){
     ll c,x,y;
     cin>>c>>x>>y;
@@ -93,7 +97,7 @@ void solve_RSQ(){
 }
 
 main(){
-  // solve_RMQ();
+   solve_RMQ();
   // https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_A
   // solve_RSQ();
   // https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_B
